@@ -1,0 +1,7 @@
+et-xmlfile==1.0.1
+fuzzywuzzy==0.18.0
+jdcal==1.4.1
+lxml==4.6.2
+openpyxl==3.0.5
+python-docx==0.8.10
+python-Levenshtein==0.12.0
