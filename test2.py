@@ -34,16 +34,24 @@ for i in KEY_COMPARE:
     #     x = fuzz.partial_ratio(abzac.text, i)
     #     if x > 70:
     #         print(f'{x} - {abzac.text}')
-    #         value = abzac.text
-    #         cell = sheet.cell(row=i, column=1)
-    #         cell.value = value
+    #         # value = abzac.text
+    #         # cell = sheet.cell(row=i, column=1)
+    #         # cell.value = value
     for j in range(0, table_size):
         for zx in table.rows[j].cells[0].paragraphs:
             x = fuzz.partial_ratio(zx.text, i)
             if x > 85:
                 if zx.text == ' ':
                     pass
+
                 else:
+                    if 'позики' in zx.text.lower():
+                        value = zx.text[0:(zx.text.find("№"))]
+                        cell = sheet.cell(row=5, column=2)
+                        cell.value = value
+                        value = zx.text[zx.text.find("№") + 1:]
+                        cell = sheet.cell(row=6, column=2)
+                        cell.value = value
                     for slova in zx.text.replace('"', '').split():
                         '''определение ЕДРПОУ'''
                         try:
@@ -65,13 +73,7 @@ for i in KEY_COMPARE:
                                     DATA.append(key)
                                 else:
                                     pass
-                    if 'позики' in zx.text.lower():
-                        value = zx.text[0:(zx.text.find("№"))]
-                        cell = sheet.cell(row=5, column=2)
-                        cell.value = value
-                        value = zx.text[zx.text.find("№") + 1:]
-                        cell = sheet.cell(row=6, column=2)
-                        cell.value = value
+
                     if 'ТОВ' in zx.text:
                         '''определение названия'''
                         print(zx.text[zx.text.find('ТОВ'):(zx.text.find(','))])
@@ -80,7 +82,7 @@ for i in KEY_COMPARE:
                         for slova in zx.text.replace('.', '').replace(',', '.').split():
 
                             try:
-                                summ = int(slova)
+                                summ = float(slova)
                                 print(summ)
                             except ValueError:
                                         pass
@@ -89,12 +91,11 @@ for i in KEY_COMPARE:
                         value = f'{summ}; {VALUTA.upper()}'
                         cell = sheet.cell(row=10, column=2)
                         cell.value = value
-print(DATA)
+
 value = ''.join(KOD_NAZ)
 cell = sheet.cell(row=4, column=2)
 cell.value = value
 value = '.'.join(DATA)
 cell = sheet.cell(row=11, column=2)
 cell.value = value
-
 wb.save("123.xlsx")
