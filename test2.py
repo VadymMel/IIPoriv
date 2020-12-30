@@ -10,15 +10,15 @@ KEY_COMPARE = ['Кінцевою датою погашення заборгов�
                'За користування позиковими коштами Позичальник виплачує',
                'позначень, ідентифікації об’єктів', 'ЄДРПОУ', 'ТОВ', 'ДОГОВІР ПОЗИКИ', 'Обсяг Позики у сумі']
 MONTH = {'01': 'січеня', '02': 'лютого', '03': 'березня', '04': 'квітня', '05': 'травня', '06': 'червня',
-         '07': 'липня', '08': 'серпня', '09': 'вересня', '10': 'жовтня',
-         '11': 'листопада', '12': 'грудня'}
+          '07': 'липня', '08': 'серпня', '09': 'вересня', '10': 'жовтня',
+          '11': 'листопада', '12': 'грудня'}
 VALUTA = 'євро'
 DATA = []
 KOD_NAZ = []
 z = 0
 rezult = 0
 max_num = 0
-summ2 = 0
+
 wb = openpyxl.Workbook()
 wb.create_sheet(title='ЗЛ', index=0)
 sheet = wb['ЗЛ']
@@ -28,6 +28,15 @@ table = doc.tables[0]
 table_size = len(table.rows)
 
 for i in KEY_COMPARE:
+    # z += 1
+    # print(f'CRUG PROVERKI = {z}')
+    # for abzac in doc.paragraphs:
+    #     x = fuzz.partial_ratio(abzac.text, i)
+    #     if x > 70:
+    #         print(f'{x} - {abzac.text}')
+    #         value = abzac.text
+    #         cell = sheet.cell(row=i, column=1)
+    #         cell.value = value
     for j in range(0, table_size):
         for zx in table.rows[j].cells[0].paragraphs:
             x = fuzz.partial_ratio(zx.text, i)
@@ -40,6 +49,7 @@ for i in KEY_COMPARE:
                         try:
                             EDRPOU = int(slova)
                             if len(str(EDRPOU)) == 8:
+                                print(slova)
                                 KOD_NAZ.append(f'{slova}; ')
                         except ValueError:
                             pass
@@ -64,23 +74,22 @@ for i in KEY_COMPARE:
                         cell.value = value
                     if 'ТОВ' in zx.text:
                         '''определение названия'''
+                        print(zx.text[zx.text.find('ТОВ'):(zx.text.find(','))])
                         KOD_NAZ.append(zx.text[zx.text.find('ТОВ'):(zx.text.find(','))])
                     if 'сумі' in zx.text:
                         for slova in zx.text.replace('.', '').replace(',', '.').split():
 
                             try:
-
                                 summ = int(slova)
-                                if summ > 0:
-                                    summ2 = summ
-                                print(summ2)
+                                print(summ)
                             except ValueError:
-                                pass
+                                        pass
                             if VALUTA == slova.lower():
                                 print(VALUTA)
-                        value = f'{summ2}; {VALUTA.upper()}'
+                        value = f'{summ}; {VALUTA.upper()}'
                         cell = sheet.cell(row=10, column=2)
                         cell.value = value
+print(DATA)
 value = ''.join(KOD_NAZ)
 cell = sheet.cell(row=4, column=2)
 cell.value = value

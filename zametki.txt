@@ -1,0 +1,3 @@
+                        if 'ТОВ' == slova:
+                            index = zx.text.find(',')
+                            print(zx.text[zx.text.find('ТОВ'):(index)])
